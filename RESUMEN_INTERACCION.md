@@ -10,14 +10,16 @@ El proceso se desarrolló mediante una serie de prompts iterativos orientados a 
 
 *   **Prompt 1 (Inicio):** _"Calculadora SoLiD. Quiero crear un programa en java que tenga operaciones aritmeticas entre numeros enteros, de tipo binarias (suma, resta, etc) y unarias (raiz cuadrada, logaritmo natural). Es una aplicación de consola. Tip: quiero todo en la misma clase"_
     *   **Resultado de la IA:** Generó la típica clase `CalculadoraMonolitica` que usamos como contra-ejemplo. Una sola clase enorme validando y ejecutando `switch-cases`. 
-*   **Prompt 2 (SRP y OCP):** _"Refactoriza la clase anterior siguiendo los principios SOLID uno por uno exceptuando el último (DIP). Empieza separando las responsabilidades (SRP) y asegurando que nuevas operaciones no modifiquen la clase principal (OCP)."_
-    *   **Resultado de la IA:** Dividió el monolito. Creó interfaces `OperacionBinaria` y `OperacionUnaria`. Las operaciones como `Suma` y `Resta` pasaron a ser clases independientes concretas.
-*   **Prompt 3 (LSP - Sustitución de Liskov):** _"Aplica el principio de Liskov (LSP). Las operaciones de división o raíz negativa me están crasheando la aplicación. Envuelve los fallos sin generar excepciones abruptas que rompan el contrato esperado."_
-    *   **Resultado de la IA:** Introdujo la clase envoltorio `Resultado.java` que retorna éxito/fallo (`isExitoso`).
-*   **Prompt 4 (ISP - Segregación de Interfaces):** _"Aplica ISP. Asegúrate de que las operaciones no se vean forzadas a implementar métodos que no usan (por ejemplo, una suma no necesita implementar un método de un solo parámetro reservado para logaritmos)."_
-    *   **Resultado de la IA:** Se afianzó el diseño de `OperacionBinaria` (dos parámetros) y `OperacionUnaria` (un parámetro), evitando interfaces "gruesas". *NOTA*: Se descartó deliberadamente el principio de Inversión de Dependencias (DIP) por instrucciones directas.
-*   **Prompt 5 (DDD, TDD y Entregables finales):** _"Finalmente, aísla el dominio con Value Objects e incluye las pruebas para TDD en los límites matemáticos (como la división sobre cero)."_
-    *   **Resultado de la IA:** Implementó la clase inmutable `Operando.java` y se añadió alta cobertura en `AppTest.java` (JUnit).
+*   **Prompt 2 (Principio de Responsabilidad Única - SRP):** _"Refactoriza la clase anterior separando las responsabilidades. Haz que cada operación matemática (suma, resta, etc.) viva en su propia clase independiente, dejando la consola solo para presentar datos."_
+    *   **Resultado de la IA:** Dividió el monolito original, sacando las operaciones a sus respectivas clases para que cada archivo tuviera una única razón para cambiar.
+*   **Prompt 3 (Principio Abierto/Cerrado - OCP):** _"Ahora quiero asegurarme de que si añado nuevas operaciones en el futuro, no tenga que modificar ni tocar el código de la Calculadora principal. Debe estar abierta a extensión pero cerrada a modificación."_
+    *   **Resultado de la IA:** Introdujo las jerarquías y delegó la ejecución de las fórmulas hacia afuera de la clase orquestadora.
+*   **Prompt 4 (Principio de Sustitución de Liskov - LSP):** _"Corrige el programa aplicando el principio de Liskov. Las operaciones como la división por cero me están rompiendo la app con excepciones. Trata los fallos matemáticos devolviendo un estado controlado funcional en lugar de crashear, para que las clases derivadas no rompan la promesa de la clase base."_
+    *   **Resultado de la IA:** Introdujo la clase envoltorio `Resultado.java` que retorna éxito/fallo (`isExitoso`) de forma segura.
+*   **Prompt 5 (Principio de Segregación de Interfaces - ISP):** _"Aplica ISP. No quiero que una operación unaria (como la raíz) se vea obligada a recibir dos parámetros inútilmente. Separa las interfaces."_
+    *   **Resultado de la IA:** Creó segregación estricta entre `OperacionBinaria` y `OperacionUnaria`. *(Nota: Por instrucciones de diseño, decidimos explícitamente **no implementar** el último principio de Inversión de Dependencias - DIP).*
+*   **Prompt 6 (Entregables y Organización Final):** _"Organiza los entregables como los necesito: recupera la clase inicial en un paquete distinto, implementa pruebas unitarias (TDD) para validar los casos borde y construye un aislamiento de dominio usando Value Objects para los números."_
+    *   **Resultado de la IA:** Implementó la clase inmutable `Operando.java`, creó los tests automatizados robustos con JUnit en `AppTest.java` y generó la estructura solicitada para el repositorio.
 
 ---
 

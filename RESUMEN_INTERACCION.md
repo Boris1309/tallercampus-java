@@ -8,16 +8,16 @@ Este documento evidencia el proceso iterativo guiado por el desarrollador en con
 
 El proceso se desarrolló mediante una serie de prompts iterativos orientados a la corrección estructural:
 
-*   **Prompt 1 (Inicio):** _"Crea una calculadora de consola en java con operaciones unarias y binarias."_
+*   **Prompt 1 (Inicio):** _"Calculadora SoLiD. Quiero crear un programa en java que tenga operaciones aritmeticas entre numeros enteros, de tipo binarias (suma, resta, etc) y unarias (raiz cuadrada, logaritmo natural). Es una aplicación de consola. Tip: quiero todo en la misma clase"_
     *   **Resultado de la IA:** Generó la típica clase `CalculadoraMonolitica` que usamos como contra-ejemplo. Una sola clase enorme validando y ejecutando `switch-cases`. 
-*   **Prompt 2 (Refactorización):** _"Refactoriza la clase anterior siguiendo los principios SOLID. Quiero aplicar OCP e ISP separando la lógica en paquetes de abstracciones."_
+*   **Prompt 2 (SRP y OCP):** _"Refactoriza la clase anterior siguiendo los principios SOLID uno por uno exceptuando el último (DIP). Empieza separando las responsabilidades (SRP) y asegurando que nuevas operaciones no modifiquen la clase principal (OCP)."_
     *   **Resultado de la IA:** Dividió el monolito. Creó interfaces `OperacionBinaria` y `OperacionUnaria`. Las operaciones como `Suma` y `Resta` pasaron a ser clases independientes concretas.
-*   **Prompt 3 (Evitar Excepciones Runtime - LSP):** _"Las operaciones de división o raíz negativa me están crasheando la aplicación. Usa el principio de sustitución de Liskov para envolver los fallos de dominio sin romper el programa."_
+*   **Prompt 3 (LSP - Sustitución de Liskov):** _"Aplica el principio de Liskov (LSP). Las operaciones de división o raíz negativa me están crasheando la aplicación. Envuelve los fallos sin generar excepciones abruptas que rompan el contrato esperado."_
     *   **Resultado de la IA:** Introdujo la clase envoltorio `Resultado.java` que retorna éxito/fallo (`isExitoso`).
-*   **Prompt 4 (DDD y Value Objects):** _"Necesitamos aislamiento total de dominio. Crea un Value Object para los operandos matemáticos y encapsula ahí las validaciones base para no pasar primitivos (int/double)."_
-    *   **Resultado de la IA:** Implementó la clase `Operando.java`. Ahora toda interfaz inyecta un objeto inmutable `Operando` que se niega a recibir números Not-a-Number (NaN) o infinitos.
-*   **Prompt 5 (TDD y Entregables finales):** _"Genera casos de prueba para los límites (división entre cero) y organiza los entregables finales con la documentación y el monolito inicial."_
-    *   **Resultado de la IA:** Ampliación de `AppTest.java` (JUnit) y creación de este reporte.
+*   **Prompt 4 (ISP - Segregación de Interfaces):** _"Aplica ISP. Asegúrate de que las operaciones no se vean forzadas a implementar métodos que no usan (por ejemplo, una suma no necesita implementar un método de un solo parámetro reservado para logaritmos)."_
+    *   **Resultado de la IA:** Se afianzó el diseño de `OperacionBinaria` (dos parámetros) y `OperacionUnaria` (un parámetro), evitando interfaces "gruesas". *NOTA*: Se descartó deliberadamente el principio de Inversión de Dependencias (DIP) por instrucciones directas.
+*   **Prompt 5 (DDD, TDD y Entregables finales):** _"Finalmente, aísla el dominio con Value Objects e incluye las pruebas para TDD en los límites matemáticos (como la división sobre cero)."_
+    *   **Resultado de la IA:** Implementó la clase inmutable `Operando.java` y se añadió alta cobertura en `AppTest.java` (JUnit).
 
 ---
 
